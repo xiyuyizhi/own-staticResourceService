@@ -1,0 +1,23 @@
+{
+  "name": "staticresourceservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiyuyizhi/staticResourceService.git"
+  },
+  "keywords": [
+    "node",
+    "staticResource"
+  ],
+  "author": "xiyuyizhi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiyuyizhi/staticResourceService/issues"
+  },
+  "homepage": "https://github.com/xiyuyizhi/staticResourceService#readme"
+}
