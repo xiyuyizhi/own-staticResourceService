@@ -6,6 +6,7 @@ body {
 }
 a{
     overflow: hidden;
+    text-decoration: underline;
 }
 img{
     cursor: pointer;
