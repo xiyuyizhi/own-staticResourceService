@@ -16,7 +16,6 @@
     "gulp-rev": "^7.0.0",
     "gulp-rev-collector": "^1.0.3",
     "gulp-rev-css-url": "^0.1.0",
-    "gulp-shell": "^0.5.2",
     "run-sequence": "^1.0.2"
   }
 }

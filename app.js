@@ -44,10 +44,7 @@ http.createServer(function (req, res) {
                         res.setHeader('Last-Modified', lastModified);
                         res.setHeader('Content-Type', contenttype || 'text/plain' + ";charset=UTF-8");
                         res.setHeader('server', 'node');
-                        console.log('lastModifiedTime '+lastModifiedTime)
-                        console.log('ifModifiedSinceTime '+ifModifiedSinceTime)
                         if (ifModifiedSince && (lastModifiedTime <= ifModifiedSinceTime)) {
-                            console.log(path)
                             //expires时间已过，但文件一直都没有修改，则还可以接着使用缓存中的文件
                             res.statusCode = 304;
                             res.end();
