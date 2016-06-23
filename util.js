@@ -19,5 +19,4 @@ util.mimes={
     "pdf": "application/pdf",
     "txt": "text/plain"
 }
-
 module.exports=util;
