@@ -5,7 +5,8 @@
 var config={
     PORT:3000,
     EXPIRES:60 * 60 * 24 * 360,
-    fileMatch:/\.(css|js|png|jpg|ico|gif)$/
+    fileMatch:/\.(css|js|png|jpg|ico|gif)$/,
+    resourceRoot:/^static/
 };
 
 module.exports=config;

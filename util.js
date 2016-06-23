@@ -7,7 +7,9 @@ util.checkSuffix=function(pathname){
    var suffix=path.extname(pathname);
     return this.mimes[suffix.substring(1)];
 }
-
+util.setHead=function(res,statusCode,contentType){
+    res.writeHead(statusCode,{'Content-Type':contentType});
+}
 util.mimes={
     'css': 'text/css',
     'js': 'application/javascript',
