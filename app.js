@@ -6,15 +6,8 @@ var http = require('http'),
     url = require('url'),
     zlib=require('zlib'),
     Util = require('./util'),
-    PORT = 3000;
+    Config=require('./config');
 var staticFiles = {};
-var SuffixMap = {
-    'css': 'text/css',
-    'js': 'application/javascript',
-    'png': 'image/png',
-    'jpg': 'image/jpeg',
-    'gif': 'image/gif'
-}
 http.createServer(function (req, res) {
 
     if (req.url !== '/favicon.ico') {
@@ -34,12 +27,12 @@ http.createServer(function (req, res) {
                     lastModifiedTime = new Date(lastModified).getTime(),//×ªÎªºÁÃë
                     ifModifiedSince = req.headers['if-modified-since'],
                     ifModifiedSinceTime = new Date(ifModifiedSince).getTime(),
-                    contenttype = Util.checkSuffix(SuffixMap, path),
+                    contenttype = Util.checkSuffix(path),
                     expires = new Date();
-                expires.setTime(expires.getTime() + 1000 * 60 * 60 * 24 * 360);
+                expires.setTime(expires.getTime() + 1000 * Config.EXPIRES);
                 res.setHeader('Last-Modified', lastModified);
                 res.setHeader('Expires', expires.toUTCString());
-                res.setHeader("Cache-Control", "max-age=" + 60 * 60 * 24 * 360);
+                res.setHeader("Cache-Control", "max-age=" + Config.EXPIRES);
                 res.setHeader('Content-Type', contenttype + ";charset=UTF-8");
                 res.setHeader('server','node');
                 if (ifModifiedSince && (lastModifiedTime <= ifModifiedSinceTime)) {
@@ -50,7 +43,6 @@ http.createServer(function (req, res) {
                     var gZip=fs.createReadStream(path);
                     res.writeHead(200, { 'Content-Encoding': 'gzip' });
                     gZip.pipe(zlib.createGzip()).pipe(res);
-                    //gZip.pipe(res);
                 }
 
             })
@@ -58,4 +50,4 @@ http.createServer(function (req, res) {
     }
 
 
-}).listen(PORT);
+}).listen(Config.PORT);
