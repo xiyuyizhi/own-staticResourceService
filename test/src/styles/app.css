@@ -18,3 +18,9 @@ img{
     margin: 0 auto;
     border-radius: 100%;
 }
+.abs{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: url('img/test.jpg') no-repeat;
+}

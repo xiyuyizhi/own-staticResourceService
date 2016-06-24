@@ -6,11 +6,13 @@ var fs=require('fs'),
     revCollector = require('gulp-rev-collector'),
     revCss = require('gulp-rev-css-url'),
     releaseTasks = require('gulp-release-tasks'),
-    seq = require('run-sequence');
+    seq = require('run-sequence'),
+    cancatJson=require('./concatJsonFs'),
+    find_rm=require('./find_rmFs');
 
 var CONFIG={
     revROOT:'dist/rev',
-    DEPLOY:'F:/gitServer/staticResourceService/static',
+    DEPLOY:'F:/workspaceForWebstorm/staticResourceService/static',
     MANIFEST:'rev-manifest.json',
     tempResource:'dist/temp/',
     CDN:'http://127.0.0.1:3000/static/'
@@ -31,71 +33,27 @@ gulp.task('clean', function () {
 });
 
 
-buildFn('js', 'src/js/*', 'js', 'js');
-buildFn('css', 'src/styles/*', 'styles', 'styles');
-buildFn('image', 'src/image/*', 'image', 'image');
+buildFn('js', 'src/js/**/**', 'js', 'js','isJs');
+buildFn('css-image',['src/styles/**/**','src/image/**/**'],'styimg','stying');
 revHtml('html', 'index.html', '');
 
 
 gulp.task('default',['clean'],function (done) {
-    fs.readdir(CONFIG.revROOT,function(err,files){
-        if(err){
-            return false;
-        }
-        console.log(files)
-        if(files.length){
-            files.forEach(function(item){
-                fs.readFile(CONFIG.revROOT+'/'+item+'/'+CONFIG.MANIFEST,'utf-8',function(err,data){
-                    if(err){
-                        return false;
-                    }
-                    var json=JSON.parse(data);
-                    for(var name in json){
-                        STORE.pathArr.push(json[name]);
-                    }
-                })
-            })
-        }
-
-    })
-
+    //先读取上一次的所有资源名称
+    cancatJson(CONFIG.revROOT,CONFIG.MANIFEST,STORE.pathArr)
     setTimeout(function(){
-        console.log(STORE.pathArr)
-        seq('js', 'css', 'image', 'html','beforeDeploy','deploy',done);
+        seq('js', 'css-image', 'html','beforeDeploy','deploy',done);
     },500)
 });
 
 gulp.task('beforeDeploy',function(){
-    console.log('beforeDeploy');
-    fs.readdir('dist/temp',function(err,files){
-        files.forEach(function(item){
-            fs.readdir(CONFIG.tempResource+item,function(err,files){
-                console.log(files);
-                if(err){
-                    return false;
-                }
-                files.forEach(function(itemFiles){
-                    if(STORE.pathArr.indexOf(itemFiles)!=-1){
-                        //文件没有更改，删掉它
-                        fs.exists(CONFIG.tempResource+item+"/"+itemFiles,function(exist){
-                            if(exist){
-                                fs.unlink(CONFIG.tempResource+item+"/"+itemFiles,function(err){
-                                    if(err){
-                                        return false;
-                                    };
-                                })
-                            }
-                        })
-
-                    }
-                })
-            })
-        })
+    //遍历文件，没有修改过的 删掉
+    fs.readdir(CONFIG.tempResource,function(err,files){
+        find_rm(files,CONFIG.tempResource,STORE.pathArr);
     })
 })
 
 gulp.task('deploy',function(){
-    console.log('delpoy')
     setTimeout(function(){
         gulp.src(CONFIG.tempResource+'**/**')
             .pipe(gulp.dest(CONFIG.DEPLOY))
@@ -104,14 +62,26 @@ gulp.task('deploy',function(){
 
 releaseTasks(gulp);
 
-function buildFn(taskName, srcPath, destPath, revPath) {
-    gulp.task(taskName, function () {
-        return gulp.src(srcPath)
-            .pipe(rev())
-            .pipe(gulp.dest(path.join(CONFIG.tempResource, destPath)))
-            .pipe(rev.manifest())
-            .pipe(gulp.dest(path.join('dist', 'rev/' + revPath)))
-    })
+function buildFn(taskName, srcPath, destPath, revPath,type) {
+    if(type){
+        gulp.task(taskName, function () {
+            return gulp.src(srcPath)
+                .pipe(rev())
+                .pipe(gulp.dest(path.join(CONFIG.tempResource, destPath)))
+                .pipe(rev.manifest())
+                .pipe(gulp.dest(path.join('dist', 'rev/' + revPath)))
+        })
+    }else{
+        gulp.task(taskName, function () {
+            return gulp.src(srcPath)
+                .pipe(rev())
+                .pipe(revCss())
+                .pipe(gulp.dest(path.join(CONFIG.tempResource, destPath)))
+                .pipe(rev.manifest())
+                .pipe(gulp.dest(path.join('dist', 'rev/' + revPath)))
+        })
+    }
+
 }
 
 
@@ -126,11 +96,11 @@ function revHtml(taskName, srcPath, desPath) {
                         var suffix = p.extname(manifest_value).substring(1),
                             pathMap = {
                                 'js': 'js',
-                                'css': 'styles'
+                                'css': 'styimg'
                             },
                             path;
                         path = pathMap[suffix];
-                        path = path || 'image';
+                        path = path || 'styimg';
                         return CONFIG.CDN + path + "/" + manifest_value;
                     }
                 }
