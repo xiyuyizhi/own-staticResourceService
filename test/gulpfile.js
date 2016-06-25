@@ -9,8 +9,7 @@ var fs=require('fs'),
     seq = require('run-sequence'),
     ftp=require('gulp-ftp'),
     gutil=require('gulp-util'),
-    cancatJson=require('./concatJsonFs'),
-    find_rm=require('./find_rmFs');
+    own_fs_util=require('own-fs-util');
 
 var CONFIG={
     revROOT:'dist/rev',
@@ -41,7 +40,7 @@ revHtml('html', 'index.html', '');
 
 gulp.task('default',['clean'],function (done) {
     //先读取上一次的所有资源名称
-    cancatJson(CONFIG.revROOT,CONFIG.MANIFEST,STORE.pathArr)
+    own_fs_util.cancatJson(CONFIG.revROOT,CONFIG.MANIFEST,STORE.pathArr)
     setTimeout(function(){
         seq('js', 'css-image', 'html','beforeDeploy','deploy',done);
     },500)
@@ -50,7 +49,7 @@ gulp.task('default',['clean'],function (done) {
 gulp.task('beforeDeploy',function(){
     //遍历文件，没有修改过的 删掉
     fs.readdir(CONFIG.tempResource,function(err,files){
-        find_rm(files,CONFIG.tempResource,STORE.pathArr);
+        own_fs_util.iteratorDelete(files,CONFIG.tempResource,STORE.pathArr);
     })
 })
 

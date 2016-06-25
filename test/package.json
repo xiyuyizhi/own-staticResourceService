@@ -18,6 +18,7 @@
     "gulp-rev-collector": "^1.0.3",
     "gulp-rev-css-url": "^0.1.0",
     "gulp-util": "^3.0.7",
+    "own-fs-util": "^1.0.3",
     "run-sequence": "^1.0.2"
   }
 }
