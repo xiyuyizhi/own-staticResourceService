@@ -94,3 +94,4 @@ http.createServer(function (req, res) {
 
 
 }).listen(Config.PORT);
+console.log('server start at port '+Config.PORT)

@@ -7,6 +7,8 @@ var fs=require('fs'),
     revCss = require('gulp-rev-css-url'),
     releaseTasks = require('gulp-release-tasks'),
     seq = require('run-sequence'),
+    ftp=require('gulp-ftp'),
+    gutil=require('gulp-util'),
     cancatJson=require('./concatJsonFs'),
     find_rm=require('./find_rmFs');
 
@@ -15,9 +17,8 @@ var CONFIG={
     DEPLOY:'F:/workspaceForWebstorm/staticResourceService/static',
     MANIFEST:'rev-manifest.json',
     tempResource:'dist/temp/',
-    CDN:'http://127.0.0.1:3000/static/'
+    CDN:'http://192.168.0.117:3000/static/'
 };
-
 
 var STORE={
     pathArr:[]//存储rev之前
@@ -53,10 +54,19 @@ gulp.task('beforeDeploy',function(){
     })
 })
 
+
+
 gulp.task('deploy',function(){
     setTimeout(function(){
+        /*gulp.src(CONFIG.tempResource+'**!/!**')
+            .pipe(gulp.dest(CONFIG.DEPLOY))*/
         gulp.src(CONFIG.tempResource+'**/**')
-            .pipe(gulp.dest(CONFIG.DEPLOY))
+            .pipe(ftp({
+                host:'192.168.0.117',
+                user:'deploy',
+                pass:'administrator'
+            }))
+            .pipe(gutil.noop())
     },1000)
 })
 

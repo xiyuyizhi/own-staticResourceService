@@ -11,11 +11,13 @@
   "dependencies": {
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.1",
+    "gulp-ftp": "^1.1.0",
     "gulp-minify-html": "^1.0.6",
     "gulp-release-tasks": "0.0.3",
     "gulp-rev": "^7.0.0",
     "gulp-rev-collector": "^1.0.3",
     "gulp-rev-css-url": "^0.1.0",
+    "gulp-util": "^3.0.7",
     "run-sequence": "^1.0.2"
   }
 }
