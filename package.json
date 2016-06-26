@@ -1,6 +1,6 @@
 {
-  "name": "staticresourceservice",
-  "version": "1.0.0",
+  "name": "own-staticresourceservice",
+  "version": "1.0.2",
   "description": "",
   "main": "app.js",
   "scripts": {
