@@ -15,12 +15,13 @@ function staticServer(){
             var Url = url.parse(req.url),
                 path = Url.pathname.substring(1),
                 contenttype = Util.checkSuffix(path);
+            console.log(path)
             //只能读取静态资源文件夹下的资源
             if(Config.resourceRoot.test(path)){
                 fs.exists(path, function (exists) {
                     if (!exists) {
                         Util.setHead(res,404,'text/html;charset=utf-8');
-                        res.write('<h1>No Found</h1><p>请求的url找不到</p>');
+                        res.write('<h1 style="text-align: center;">No Found</h1>');
                         res.end();
                         return;
                     }
@@ -65,22 +66,29 @@ function staticServer(){
                         })
                     }
                     else{
-                        fs.readFile(path,'utf-8',function(err,data){
-                            if(err){
-                                Util.setHead(res,500,'text/plain')
-                                res.write(err);
+                        fs.stat(path,function(err,stats){
+                            if(stats.isDirectory()){
+                                Util.setHead(res,403,'text/html;charset=utf-8');
+                                res.write('<h1 style="text-align: center;">Forbidden</h1>');
                                 res.end();
-                                return;
                             }else{
-                                Util.setHead(res,200,contenttype||'text/plain');
-                                res.end(data);
+                                fs.readFile(path,'utf-8',function(err,data){
+                                    if(err){
+                                        Util.setHead(res,500,'text/plain')
+                                        res.write(err);
+                                        res.end();
+                                        return;
+                                    }else{
+                                        Util.setHead(res,200,contenttype||'text/plain');
+                                        res.end(data);
+                                    }
+                                })
                             }
                         })
                     }
 
                 });
             }else{
-                console.log(path)
                 if(req.url=="/"){
                     Util.setHead(res,200,'text/html;charset=utf-8');
                     res.write('<h1 style="text-align: center;">静态资源服务</h1>');

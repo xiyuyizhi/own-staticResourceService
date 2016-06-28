@@ -16,7 +16,7 @@ var CONFIG={
     DEPLOY:'F:/workspaceForWebstorm/staticResourceService/static',
     MANIFEST:'rev-manifest.json',
     tempResource:'dist/temp/',
-    CDN:'http://192.168.0.117:3000/static/'
+    CDN:'http://192.168.20.81:3000/static/'
 };
 
 var STORE={
@@ -42,6 +42,7 @@ gulp.task('default',['clean'],function (done) {
     //先读取上一次的所有资源名称
     own_fs_util.cancatJson(CONFIG.revROOT,CONFIG.MANIFEST,STORE.pathArr)
     setTimeout(function(){
+        console.log(STORE.pathArr)
         seq('js', 'css-image', 'html','beforeDeploy','deploy',done);
     },500)
 });
@@ -57,11 +58,9 @@ gulp.task('beforeDeploy',function(){
 
 gulp.task('deploy',function(){
     setTimeout(function(){
-        /*gulp.src(CONFIG.tempResource+'**!/!**')
-            .pipe(gulp.dest(CONFIG.DEPLOY))*/
         gulp.src(CONFIG.tempResource+'**/**')
             .pipe(ftp({
-                host:'192.168.0.117',
+                host:'192.168.20.81',
                 user:'deploy',
                 pass:'administrator'
             }))
