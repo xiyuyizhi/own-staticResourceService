@@ -10,7 +10,9 @@ var http = require('http'),
 
 function staticServer(){
     http.createServer(function (req, res) {
-
+        if(req.url=='/favicon.ico'){
+            res.end();
+        }     
         if (req.url !== '/favicon.ico') {
             var Url = url.parse(req.url),
                 path = Url.pathname.substring(1),
