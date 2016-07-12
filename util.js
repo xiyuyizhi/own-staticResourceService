@@ -19,6 +19,9 @@ util.mimes={
     "ico": "image/x-icon",
     "json": "application/json",
     "pdf": "application/pdf",
-    "txt": "text/plain"
-}
+    "txt": "text/plain",
+    "woff":"application/font-woff",
+    "ttf":"truetype",
+    "eot":"application/vnd.ms-fontobject"
+};
 module.exports=util;
